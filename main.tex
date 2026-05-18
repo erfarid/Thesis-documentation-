@@ -1,0 +1,1920 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+% Use classic Computer Modern-style fonts to match the sample document
+% (do not load Latin Modern).
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage[normalem]{ulem}
+\usepackage{fancyvrb}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{caption}
+\usepackage{chngcntr}
+\usepackage{pdflscape}
+\usepackage{pdfpages}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\definecolor{titleblue}{RGB}{0,70,120}
+\definecolor{subblue}{RGB}{91,155,213}
+\definecolor{linkblue}{RGB}{91,155,213}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=linkblue,
+  pdftitle={Smart Parking System Project},
+  pdfauthor={Author Name},
+  linktoc=all
+}
+\urlstyle{same}
+\let\oldurl\url
+\renewcommand{\url}[1]{\href{#1}{\textcolor{linkblue}{\uline{#1}}}}
+
+\setstretch{1.15}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.22em}
+\setlist[itemize]{leftmargin=2em,itemsep=0.55\baselineskip,topsep=3pt,parsep=0pt,partopsep=0pt}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.55\baselineskip,topsep=3pt,parsep=0pt,partopsep=0pt}
+\setlength{\headheight}{15pt}
+\renewcommand{\arraystretch}{1.15}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancyfoot[C]{\thepage}%
+}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{0}
+\counterwithout{figure}{chapter}
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\cftfigpresnum}{Figure\ }
+\renewcommand{\cftfigfont}{\color{black}}
+\renewcommand{\cftfigpagefont}{\color{black}}
+\renewcommand{\cftfigaftersnum}{\ }
+\setlength{\cftfignumwidth}{5.5em}
+
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\Large}
+  {\chaptername\ \thechapter}{0.5em}{\Huge}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{titleblue}}
+  {\thesection}{0.8em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{subblue}}
+  {}{0em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{subblue}}
+  {}{0em}{}
+\titlespacing*{\section}{0pt}{0.9em}{0.4em}
+\titlespacing*{\subsection}{0pt}{0.65em}{0.2em}
+\titlespacing*{\subsubsection}{0pt}{0.45em}{0.15em}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+
+\DefineVerbatimEnvironment{codeblock}{Verbatim}{fontsize=\small}
+
+
+\newcounter{thesischapter}
+\newcounter{thesissection}[thesischapter]
+\newcounter{thesissubsection}[thesissection]
+
+\newcommand{\ThesisChapter}[1]{%
+\clearpage
+\refstepcounter{thesischapter}%
+\setcounter{thesissection}{0}%
+\setcounter{thesissubsection}{0}%
+\phantomsection%
+\addcontentsline{toc}{chapter}{Chapter \thethesischapter}%
+\addcontentsline{toc}{section}{\protect\numberline{\thethesischapter.}#1}%
+\markboth{#1}{#1}%
+{\normalfont\bfseries\LARGE Chapter \thethesischapter\par}%
+\vspace{0.45em}%
+{\normalfont\bfseries\LARGE \thethesischapter. #1\par}%
+\vspace{1em}%
+}
+
+\newcommand{\ThesisSection}[1]{%
+\refstepcounter{thesissection}%
+\setcounter{thesissubsection}{0}%
+\phantomsection%
+\addcontentsline{toc}{subsection}{\protect\numberline{\thethesischapter.\thethesissection}#1}%
+{\normalfont\bfseries\Large\color{titleblue}\thethesischapter.\thethesissection\hspace{0.25em}#1\par}%
+\vspace{0.65em}%
+}
+
+\newcommand{\placeholderfigure}[3][0.28\textheight]{%
+\begin{figure}[H]
+\centering
+{\color{black}\fbox{%
+  \parbox[c][#1][c]{0.88\textwidth}{%
+    \centering
+    {\Large\textbf{Placeholder}}\\[0.8em]
+    {\large #2}\\[0.8em]
+    \normalsize #3\\[0.6em]
+    \textit{Replace this box with the final exported image or screenshot.}
+  }%
+}}
+\caption{#2}
+\end{figure}}
+
+
+\newcommand{\ManualContentsPage}{%
+  \clearpage
+  \phantomsection
+  \thispagestyle{plain}%
+  {\begingroup
+  \normalsize
+  \setstretch{0.94}%
+  \setlength{\parskip}{0pt}%
+  \setlength{\cftbeforetoctitleskip}{0pt}%
+  \setlength{\cftaftertoctitleskip}{0.35em}%
+  \setlength{\cftbeforechapskip}{0.08em}%
+  \setlength{\cftbeforesecskip}{0pt}%
+  \setlength{\cftbeforesubsecskip}{0pt}%
+  \setlength{\cftchapindent}{0pt}%
+  \setlength{\cftsecindent}{1.4em}%
+  \setlength{\cftsubsecindent}{2.8em}%
+  \setlength{\cftchapnumwidth}{0pt}%
+  \setlength{\cftsecnumwidth}{2.2em}%
+  \setlength{\cftsubsecnumwidth}{3.2em}%
+  \renewcommand{\contentsname}{Contents}%
+  \renewcommand{\cfttoctitlefont}{\normalfont\Large\color{titleblue}}%
+  \renewcommand{\cftaftertoctitle}{\par\vspace{0.2em}}%
+  \renewcommand{\cftchapfont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftsecfont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftsubsecfont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftchappagefont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftsecpagefont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftsubsecpagefont}{\normalfont\normalsize\color{black}}%
+  \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
+  \renewcommand{\cftdotsep}{1}%
+  \tableofcontents
+  \endgroup}
+}
+
+
+
+\newcommand{\CustomFrontPage}{%
+  \begin{titlepage}
+    \thispagestyle{plain}
+    \centering
+
+    \vspace*{-1.8cm}
+
+    % Top image moved left and higher
+    \includegraphics[width=0.98\textwidth,height=1.3\textheight,keepaspectratio]{Images/front_first_page.png}
+
+    \vspace{3.2cm}
+
+    % Thesis title
+    {\LARGE\bfseries Smart Parking License Plate Recognition \& Dynamic Pricing System\par}
+
+    \vspace{2.2cm}
+
+    % Supervisor and Author section moved up
+    \noindent
+    \begin{minipage}[t]{0.45\textwidth}
+      \raggedright
+      {\itshape Supervisor: \textbf{Guettala Walid}\par}
+      {\itshape PhD Student\par}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+      \raggedleft
+      {\itshape Author: \textbf{Md Farid}\par}
+      {\itshape B.Sc Computer Science\par}
+    \end{minipage}
+
+    \vfill
+
+    {\large\itshape Budapest, 2026\par}
+  \end{titlepage}
+}
+
+\newcommand{\InsertSecondPage}{%
+  \setcounter{page}{2}%
+  \includepdf[
+    pages=1,
+    fitpaper=true,
+    pagecommand={\thispagestyle{plain}\setcounter{page}{2}}
+  ]{Images/thesis_intro.pdf}%
+}
+
+\begin{document}
+\color{black}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\hypersetup{pageanchor=false}
+\CustomFrontPage
+\InsertSecondPage
+\clearpage
+\hypersetup{pageanchor=true}
+\ManualContentsPage
+\clearpage
+
+\ThesisChapter{Introduction}
+
+\ThesisSection{Motivation}
+
+In growing urban areas, parking management remains a daily challenge for both drivers and parking authorities. Drivers often spend unnecessary time searching for available parking spaces, which increases road congestion, causes frustration, and wastes fuel. At the same time, parking workers and administrators must handle vehicle records, payments, fines, and zone monitoring in a way that is often slow when supported only by manual processes. These difficulties show the need for a smarter and more organized parking solution that can reduce confusion and improve the overall flow of parking-related operations.
+
+The motivation for this project comes from the need to make parking management more efficient, transparent, and practical through a unified digital system. In addition to handling parking sessions, vehicles, payments, and administrative tasks, the project is motivated by the idea of giving users better situational awareness through live map support and congestion-related information. A system that helps visualize parking zones and activity in real time can support better decisions for drivers and can also help administrators monitor high-demand areas more effectively. This makes the parking process easier not only for individual users, but also for the people responsible for supervising and managing the service.
+
+Modern web and software technologies make it possible to build such a system in a practical and accessible way. By using FastAPI for backend services, React for the frontend interface, SQLite for structured local data storage, and computer vision tools such as YOLO and EasyOCR for license plate support, the project combines everyday usability with intelligent automation. The motivation behind choosing these technologies is not only technical implementation, but also the need to create a responsive, web-based platform that can support real-time interaction, simplify parking-related workflows, and contribute to a more efficient urban parking experience.
+
+\ThesisSection{Goals}
+
+The primary objective of this project is to design and implement a practical Smart Parking System that can support everyday parking operations in budapest through one connected web application. The work combines parking sessions, user roles, supervision, payments, worker activity, and reporting inside one platform. In this way, the system is intended to reduce manual administration, improve operational clarity, and provide a software foundation that can be reviewed, maintained, and extended in a structured manner.
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+    \item \textbf{Efficient Parking Operations:} Parking-related tasks should move through a clearer digital workflow. The system should reduce delays, confusion, and unnecessary manual coordination in daily use.
+
+    \item \textbf{Structured Session Control:} Vehicle and parking session data should remain consistent and easy to track. Starting, monitoring, and closing sessions should therefore follow one transparent process.
+
+    \item \textbf{Secure Role-Based Access:} Drivers, workers, and administrators need different system functions. Access should be controlled clearly so that each role works only with the parts relevant to its responsibilities.
+
+    \item \textbf{Administrative Supervision:} The platform should support monitoring at management level as well as everyday parking use. Records, summaries, and operational views should help administrators supervise the system more effectively.
+
+    \item \textbf{Payment and Notice Management:} Payment-related records and notice handling should be integrated into the same platform. This keeps financial and enforcement-related information easier to manage and review.
+
+    \item \textbf{Live Monitoring Support:} Real-time understanding of parking activity should be improved through map-based visibility and congestion-related information. This gives the system a more practical role than a simple record-keeping application.
+
+    \item \textbf{Scalable and Reliable Architecture:} The software should remain stable in current use while still supporting later extension. Scalability and reliability should be supported by FastAPI, React, SQLite, together with YOLO and EasyOCR for intelligent plate-related functionality.
+
+    \item \textbf{Comprehensive Testing and Quality Assurance:} Reliable system behavior should be checked through backend tests, frontend validation, and API-level verification of important workflows. Treating testing as a project goal strengthens the technical quality of the final result.
+
+    \item \textbf{Detailed and Accessible Documentation:} The project should include clear documentation for both users and developers. Installation, configuration, usage, and maintenance-related information should be presented in a structured form.
+\end{enumerate}
+
+By accomplishing these goals, the project is intended to provide a practical and technically structured parking management solution that is useful in its present form and suitable for later extension.
+
+\ThesisSection{Scope of the Project}
+
+The Smart Parking System provides a practical and comprehensive parking management solution for drivers, parking workers, and administrators in budapest. District-oriented parking operation, role-based workflows, administrative supervision, payment-related functions, messaging, reporting, and selected intelligent automation are all part of the system. The scope encompasses the following core functionalities and components:
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+    \item \textbf{Budapest District-Based Operation:} The system is tailored to budapest and its district-based parking environment. Districts and zone-related records are treated as core parts of the software structure.
+
+    \item \textbf{Role-Based Workflows:} Separate workflows are provided for the three main roles supported by the application.
+    \begin{itemize}[leftmargin=2.2em]
+        \item \textbf{User:} manages personal vehicles, parking sessions, payments, notices, and message-related updates.
+        \item \textbf{Admin:} maintains districts, supervises records, reviews reports, manages workers and users, and can directly close sessions.
+        \item \textbf{Worker:} patrols the city, scans vehicles, verifies session status, and can issue fines when no active session exists.
+    \end{itemize}
+
+    \item \textbf{Vehicle and Session Management Modules:} Vehicle registration, session creation, running session tracking, and session closure are included in the system. These modules form the main operational foundation of the parking workflow.
+
+    \item \textbf{Payment and Notice Records:} Payment-related information and notice management are both covered within the scope. The system therefore handles not only standard parking use but also enforcement-related record keeping.
+
+    \item \textbf{Administrative Views and Reporting:} Administrative pages are available for supervision, summaries, and report-oriented review. These functions cover parking activity, notices, user and worker records, and revenue-related information.
+
+    \item \textbf{Map-Based Visualization:} A live map is included so that parking-related information can be viewed visually rather than only through text-based records. This supports clearer operational awareness during use.
+
+    \item \textbf{Congestion-Related Visibility:} Congestion-oriented presentation of activity is also included. This helps higher-demand parking areas stand out more clearly.
+
+    \item \textbf{Message and Notification Support:} A dedicated message section is available for notification-style communication and for delivering important updates to the relevant users.
+
+    \item \textbf{Plate Scanning and OCR Support:} Worker-oriented scanning functions are available together with upload-based plate processing.
+    \begin{itemize}[leftmargin=2.2em]
+        \item YOLO is used to support plate detection within uploaded vehicle images.
+        \item EasyOCR is used to read the detected plate text during verification tasks.
+    \end{itemize}
+
+    \item \textbf{Authentication and Access Control:} Login, registration, and role-based access handling are included as core security features. User management and protected access to role-specific pages are both part of the system.
+
+    \item \textbf{Testing Coverage:} The scope also includes the testing work completed during development.
+    \begin{itemize}[leftmargin=2.2em]
+        \item Backend logic is checked through automated tests.
+        \item Frontend behavior is supported by validation-oriented testing.
+        \item Important API workflows are verified at endpoint level.
+    \end{itemize}
+
+    \item \textbf{Documentation Coverage:} Both user-facing and developer-facing documentation are included. User documentation covers setup and everyday usage, while developer documentation describes system structure, workflow, testing, and technical details needed for maintenance or later extension.
+\end{enumerate}
+
+\ThesisChapter{User Documentation}
+
+\ThesisSection{Introduction}
+
+Welcome to the Smart Parking Project. This web application is designed to support the management of parking activity in Budapest districts through a single integrated platform. The system combines user-facing parking services with administrative supervision and worker patrol functions, making it possible to handle different parking-related tasks within one environment. Drivers can register vehicles, start parking sessions, monitor running costs, and settle unpaid fees. Administrators can maintain districts, review traffic and revenue statistics, and supervise the overall operation of the platform. Parking workers can check plate numbers, verify whether a vehicle has an active session, and issue a fine when necessary.
+
+The main user-facing idea behind the system is simplicity. Instead of relying on separate tools for parking, payment handling, district lookup, and notifications, the platform brings these functions together in one application. The interface adapts to the role of the logged-in user, while the underlying data remain consistent across the whole system. This allows the application to provide a more organized, practical, and efficient parking management experience for all types of users.
+
+\ThesisSection{Used Methods and Tools}
+
+The system integrates a combination of practical frontend, backend, database, image-processing, and development tools to support parking sessions, district-based operation, payments, reporting, worker patrol tasks, and image-based plate verification. Below is a structured summary of the main tools and methods used in the project:
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+    \item \textbf{Frontend Technologies:}
+    \begin{enumerate}[leftmargin=2.5em,label=\arabic*.]
+        \item \textbf{React.js} – Provides an interactive and component-based frontend experience.
+        \item \textbf{Vite} – Supports fast frontend development and efficient project bundling.
+        \item \textbf{React Router} – Handles navigation between dashboards, session pages, payment pages, reports, worker tools, and profile pages.
+        \item \textbf{Chart.js and react-chartjs-2} – Used to visualize parking and reporting information through charts.
+        \item \textbf{React Leaflet and Leaflet} – Provide map-based visualization of districts, zones, and congestion-related information.
+    \end{enumerate}
+
+    \item \textbf{Backend Technologies:}
+    \begin{enumerate}[leftmargin=2.5em,label=\arabic*.]
+        \item \textbf{FastAPI} – Provides fast, reliable, and structured backend API functionality.
+        \item \textbf{Pydantic} – Ensures request and response validation through defined schemas.
+        \item \textbf{Python} – Used for implementing backend services, business logic, repositories, and utility modules.
+        \item \textbf{SQLite} – Stores users, vehicles, sessions, zones, payments, notices, and reporting data in a structured relational database.
+    \end{enumerate}
+
+    \item \textbf{Image Processing and OCR Tools:}
+    \begin{enumerate}[leftmargin=2.5em,label=\arabic*.]
+        \item \textbf{OpenCV} – Used for image decoding and image-handling tasks related to uploaded plate images.
+        \item \textbf{EasyOCR} – Extracts text from uploaded vehicle plate images.
+        \item \textbf{Ultralytics YOLOv8} – Used for license plate localization. A YOLOv8 model fine-tuned for license plates returns bounding boxes for plate regions, which are then passed to EasyOCR.
+    \end{enumerate}
+
+    \item \textbf{Development and Testing Tools:}
+    \begin{enumerate}[leftmargin=2.5em,label=\arabic*.]
+        \item \textbf{Git and GitHub} – Support version control and project collaboration.
+        \item \textbf{Visual Studio Code} – Used as the main code editor and development environment.
+        \item \textbf{Pytest} – Used for backend unit and service-level testing.
+        \item \textbf{Vitest and Testing Library} – Used for selected frontend test cases and component validation.
+        \item \textbf{Postman} – Used for manual API endpoint testing and request/response validation.
+    \end{enumerate}
+\end{enumerate}
+
+\ThesisSection{User Guide}
+
+\subsection*{2.3.1 Hardware Requirements}
+
+The Smart Parking web application can run on systems with the following hardware configurations:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Component} & \textbf{Minimum} & \textbf{Recommended} \\
+\hline
+Processor & 2.0 GHz dual-core CPU & 3.0 GHz or faster quad-core CPU \\
+\hline
+Memory & 4 GB RAM & 8 GB RAM or higher \\
+\hline
+Display & 1024$\times$768 resolution & 1920$\times$1080 resolution (Full HD) \\
+\hline
+Storage & 2 GB available disk space & SSD with additional free space \\
+\hline
+\end{tabular}
+\caption{Hardware requirements}
+\label{tab:hardware-req}
+\end{table}
+
+Running the application on systems below these minimum requirements may lead to slower frontend loading, delayed API responses, or reduced performance when optional OCR-related functions are used.
+
+\subsection*{2.3.2 Network Requirements}
+For normal usage, the network connection should satisfy the following conditions:
+\begin{itemize}[leftmargin=2em,noitemsep,topsep=2pt]
+    \item Bandwidth: 50 KBps (400 kbps) or higher
+    \item Latency: Under 150 ms
+    \item Stable local or internet access when frontend and backend are not running on the same machine
+\end{itemize}
+
+\subsection*{2.3.3 Supported Web Browsers}
+The platform is compatible with the following browsers:
+\begin{itemize}[leftmargin=2em,noitemsep,topsep=2pt]
+    \item Microsoft Edge (latest version)
+    \item Mozilla Firefox (latest version)
+    \item Google Chrome (latest version)
+\end{itemize}
+
+\subsection*{2.3.4 Roles}
+
+The application supports three roles.
+
+\begin{table}[H]
+\centering
+\caption{Roles and their main tasks}
+\label{tab:user-roles}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Role} & \textbf{Main tasks} \\
+\midrule
+User & manages own vehicles, opens sessions, checks notices, reviews history, and pays fees \\
+Admin & monitors activity, manages districts, reviews financial summaries, and sends messages \\
+Worker & checks parked vehicles, verifies session status, and issues fines when needed \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{2.3.5 Basic Navigation}
+
+After login, the visible pages depend on the role. A user normally works with the dashboard, vehicles, sessions, payment, profile, and messages pages. An administrator sees management-oriented pages such as zones, reports, workers, and user summaries. A worker sees the patrol workflow and the message-related pages required for field work.
+
+\ThesisSection{Installation and Configuration}
+
+\subsection*{Prerequisites}
+
+Before installation, ensure your system includes:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Git:} For version control and repository management.
+    \item \textbf{Python (3.9 or higher):} Required for running backend services.
+    \item \textbf{Node.js and npm:} Required for running the frontend application.
+\end{itemize}
+
+\subsection*{Installing Git}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Download Git from \url{https://git-scm.com/downloads}
+    \item Follow the on-screen instructions for your operating system.
+\end{enumerate}
+
+\subsection*{Installing Python}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Visit \url{https://www.python.org/downloads/} to install Python (3.9 or later).
+    \item Verify installation via command prompt:
+\end{enumerate}
+
+\begin{codeblock}
+python --version
+\end{codeblock}
+
+\subsection*{Setup Instructions}
+
+\subsubsection*{Cloning the Repository}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Open terminal or command prompt.
+    \item Navigate to your preferred directory:
+\end{enumerate}
+
+\begin{codeblock}
+cd ~/your-directory
+\end{codeblock}
+
+\begin{enumerate}[leftmargin=2em,start=3]
+    \item Clone repository:
+\end{enumerate}
+
+\begin{codeblock}
+git clone https://szofttech.inf.elte.hu/gnn/thesis/farid-md-farid.git
+cd farid-md-farid
+\end{codeblock}
+
+
+\subsubsection*{Setting Up the Environment}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Create a virtual environment:
+\end{enumerate}
+
+\begin{codeblock}
+python -m venv venv
+\end{codeblock}
+
+\begin{enumerate}[leftmargin=2em,start=2]
+    \item Activate virtual environment:
+\end{enumerate}
+
+\textbf{Windows:}
+\begin{codeblock}
+venv\Scripts\activate
+\end{codeblock}
+
+\textbf{Mac/Linux:}
+\begin{codeblock}
+source venv/bin/activate
+\end{codeblock}
+
+\begin{enumerate}[leftmargin=2em,start=3]
+    \item Install dependencies:
+\end{enumerate}
+
+\begin{codeblock}
+cd backend
+pip install -r requirements-ci.txt
+# optional for OCR / plate detection support:
+pip install opencv-python-headless easyocr ultralytics numpy
+cd ..
+\end{codeblock}
+
+
+\subsubsection*{Running the Application}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Ensure virtual environment activation.
+    \item Navigate to project folder.
+    \item Run backend server (FastAPI):
+\end{enumerate}
+
+\begin{codeblock}
+cd backend
+uvicorn app.main:app --reload
+\end{codeblock}
+
+\begin{enumerate}[leftmargin=2em,start=4]
+    \item Run frontend application:
+\end{enumerate}
+
+Open a new terminal and in the frontend directory run the following commands:
+
+\begin{codeblock}
+cd frontend
+npm install
+# if version conflicts occur:
+# npm install --legacy-peer-deps
+npm install
+npm run dev
+\end{codeblock}
+
+If local configuration variables are needed, create the appropriate environment file before starting the frontend. Store only the values required by your own local setup, and keep sensitive credentials outside version control.
+
+
+
+\ThesisSection{Features of the Smart Parking Project}
+
+The Smart Parking Project includes several practical features for users, administrators, and parking workers. The following sections describe the most important parts of the system in the same user-oriented style as the sample documentation.
+
+\subsection*{2.5.1 User Authentication and Login}
+
+\textbf{What It Does:} This feature allows users to create an account, sign in, and access the system according to their assigned role. After login, the interface changes depending on whether the account belongs to a driver, an administrator, or a parking worker. Special access codes are required during registration to create administrator or worker accounts, ensuring that these roles are assigned securely.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the login or registration page.
+    \item Enter the required account details.
+    \item If registering as an administrator or worker, provide the special access code.
+    \item Submit the form to sign in or create a new account.
+    \item Continue to the dashboard after successful authentication.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Login.png}
+    \caption{Login Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Register.png}
+    \caption{Registration Page}
+\end{figure}
+
+\subsection*{2.5.2 Vehicle Management}
+
+\textbf{What It Does:} This feature allows a user to register and manage personal vehicles that will later be used in parking sessions. For the first time, the user only needs to click the car number plate image and complete the vehicle registration process. After registration, the vehicle becomes linked to that user account, and the same vehicle can be selected directly when starting parking in the future.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the vehicle management page.
+    \item Click the car number plate image to add a vehicle for the first time.
+    \item Enter the plate number and other required details.
+    \item Save the vehicle and review it in the vehicle list.
+    \item Use the registered vehicle directly when starting a parking session next time.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/register_vehicles.png}
+    \caption{Vehicle Registration Page}
+\end{figure}
+
+
+\subsection*{2.5.3 Parking Session Creation}
+
+\textbf{What It Does:} This feature allows a user to start a parking session by choosing a registered vehicle and the required district or zone. It is the main entry point for active parking use inside the system.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the parking session page.
+    \item Select the required vehicle.
+    \item Choose the district or parking zone.
+    \item Confirm the action to start the parking session.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Parking_sessions.png}
+    \caption{Parking Session Creation Page}
+\end{figure}
+
+\subsection*{2.5.4 Session Tracking and Parking History}
+
+\textbf{What It Does:} This feature shows running sessions, completed sessions, and previous parking records. It helps users follow the status of active parking and review earlier activity when needed.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the sessions page.
+    \item Review the active session list if parking is currently running.
+    \item Open the history area to view completed sessions.
+    \item Check details such as duration, zone, and related payment information.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Session_tracking.png}
+    \caption{Session Tracking Page}
+\end{figure}
+
+\subsection*{2.5.5 Payment Handling}
+
+\textbf{What It Does:} This feature helps users review parking-related fees, unpaid balances, and completed payments. It provides a clearer way to manage financial information connected to parking use.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the payment page.
+    \item Review unpaid sessions, fees, or outstanding balances.
+    \item Continue to the payment action when required.
+    \item Confirm the payment and review the updated status.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Unpaid_sessions.png}
+    \caption{Unpaid Sessions Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Card_payment.png}
+    \caption{Card Payment Page}
+\end{figure}
+
+\subsection*{2.5.6 Notices and Messages}
+
+\textbf{What It Does:} This feature provides users with notices, warnings, and message-based updates related to parking activity. It can be used to communicate important system information, payment-related updates, or enforcement-related messages.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the messages page.
+    \item Review any newly received updates.
+    \item Open individual items to read their details.
+    \item Return to the relevant page if follow-up action is required.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Messages .png}
+    \caption{Messages Page}
+\end{figure}
+
+\subsection*{2.5.7 Administrative Dashboard and Reports}
+
+\textbf{What It Does:} This feature gives administrators an overview of parking activity, revenue-related information, district operation, and other system-level summaries. It supports supervision and reporting from a central interface.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Sign in with an administrator account.
+    \item Open the dashboard page.
+    \item Review the available charts, summaries, and report values.
+    \item Navigate to related administration pages when additional action is needed.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Admin_dashboard.png}
+    \caption{Admin Dashboard Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Reports1.png}
+    \caption{Reports Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Breakdown_zone.png}
+    \caption{Revenue Breakdown by Zone}
+\end{figure}
+
+\subsection*{2.5.8 District and Zone Management}
+
+\textbf{What It Does:} This feature allows the administrator to maintain district-related parking settings and zone information. It is used to organize parking operation according to local district-based structure.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the district or zone management page.
+    \item Review the existing entries.
+    \item Add, update, or remove the necessary district information.
+    \item Save the changes and verify the updated configuration.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Zones.png}
+    \caption{Zone Configuration Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/Zone_edit.png}
+    \caption{Edit Zone Page}
+\end{figure}
+
+\subsection*{2.5.9 Worker Patrol and Plate Verification}
+
+\textbf{What It Does:} This feature supports parking workers during patrol activity by allowing plate checking, session verification, and fine issuance when a vehicle has no active parking session. It also supports upload-based plate recognition through OCR-related tools when needed.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Sign in with a worker account.
+    \item Open the patrol or verification page.
+    \item Enter a plate number manually or upload an image for OCR support.
+    \item Review the returned status and continue with fine issuance if required.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/worker.png}
+    \caption{Worker Dashboard Page}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/worker.png}
+    \caption{Worker Fine Notice Page}
+\end{figure}
+
+\subsection*{2.5.10 Live Map and Congestion Monitoring}
+
+\textbf{What It Does:} This feature provides a live map view that displays parking areas along with traffic congestion information. The map uses different colors to represent parking sessions and congestion levels in each zone, making it easier to understand which areas are busy and which are less occupied.
+
+\textbf{How to Use It:}
+\begin{enumerate}[leftmargin=2em]
+    \item Open the live map section from the dashboard.
+    \item View the map with colored zones indicating parking activity and congestion.
+    \item Identify less congested areas for easier parking.
+    \item Use the information to decide where to start a parking session.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.98\textwidth,height=0.7\textheight,keepaspectratio]{Images/live_images.png}
+    \caption{Live Map and Congestion Monitoring Page}
+\end{figure}
+
+\subsection*{Troubleshooting and FAQs}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Q: I cannot start a parking session. What should I do?}\\
+    \textbf{A:} Make sure that at least one vehicle is registered in your account and that the required district or zone has been selected correctly.
+
+    \item \textbf{Q: Why is my payment status not updating?}\\
+    \textbf{A:} Refresh the payment page and verify that the payment process was completed successfully. If the issue remains, review the related session and notice information.
+
+    \item \textbf{Q: Why does the worker page show that no active session exists?}\\
+    \textbf{A:} Check that the correct plate number was entered or detected. If OCR was used, review the returned plate value before proceeding.
+
+    \item \textbf{Q: Why can I not see admin or worker pages after login?}\\
+    \textbf{A:} The visible interface depends on the assigned role. Make sure you are logged in with the correct account type.
+
+    \item \textbf{Q: The map or dashboard data is not displaying correctly. What should I do?}\\
+    \textbf{A:} Refresh the page, confirm that the backend service is running, and check whether the related district, session, or reporting data has been loaded correctly.
+\end{itemize}
+
+
+\ThesisChapter{Developer Documentation}
+
+\ThesisSection{Problem Specification}
+
+The Smart Parking Project is a web application designed to support parking management in Budapest through a role-based digital platform. The system combines user-facing parking services, administrative supervision, and worker patrol functions in one environment. It is intended to address common parking management problems such as manual session checking, unclear payment status, slow vehicle verification, and limited visibility of parking activity across districts and zones. The system aims to provide users with the following features:
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{User Authentication and Role Access:} The system allows users to register, log in, and access the platform according to their assigned role.
+    \item \textbf{Vehicle Management:} Users can register and manage personal vehicles before starting parking sessions.
+    \item \textbf{Parking Session Handling:} The system supports session creation, monitoring, fee review, and session closure.
+    \item \textbf{Payment and Notice Management:} Users can review unpaid fees, while the platform also supports notice and fine handling.
+    \item \textbf{Administrative Supervision:} Administrators can maintain districts, review records, monitor parking activity, and close sessions when required.
+    \item \textbf{Worker Patrol Functions:} Parking workers can check vehicle plates, verify active sessions, and issue fines when a vehicle has no valid session.
+    \item \textbf{Live Map and Congestion View:} The platform includes a map-based view that visualizes parking activity and congestion conditions across zones.
+    \item \textbf{License Plate Recognition Support:} Image-based plate detection and OCR are used to support faster vehicle verification.
+\end{itemize}
+
+
+\ThesisSection{Tools and Methods Used}
+
+The following comprehensive methods, tools, and approaches were integrated to construct the Smart Parking System:
+
+\subsubsection*{3.2.1 Machine Learning and Image Processing Tools}
+\textbf{Plate Recognition / OCR Module:}\\
+Used to process uploaded parking images and extract vehicle plate numbers.\\
+Provides automated input handling, reducing manual work and improving operational speed.
+
+\textbf{Image Validation and Plate Format Checking:}\\
+Ensures that recognized plate text follows the expected format before creating a parking session.\\
+Improves reliability and prevents invalid session entries.
+
+\subsubsection*{3.2.2 APIs and Frameworks}
+\textbf{FastAPI:}\\
+Fast, lightweight Python framework used to build robust REST APIs.\\
+Handles HTTP requests, routing, request validation, and structured backend communication efficiently.
+
+\textbf{Pydantic:}\\
+Used for request and response validation in backend APIs.\\
+Ensures that data passed between frontend and backend follows the required structure and reduces runtime errors.
+
+\subsubsection*{3.2.3 Frontend Technologies}
+\textbf{React.js:}\\
+Component-based frontend technology ensuring an interactive and responsive user experience.
+
+\textbf{React Router:}\\
+Handles navigation between login, dashboards, sessions, profile pages, zone configuration, reports, worker tools, and message pages.
+
+\textbf{CSS Styling and UI Libraries:}\\
+The interface uses regular CSS files together with \texttt{react-chartjs-2}, \texttt{chart.js}, \texttt{leaflet}, and \texttt{react-leaflet} for charts and map-based visualization.
+
+\textbf{Frontend Page-Based Architecture:}\\
+Organizes pages such as session management, zone configuration, reports, image upload, admin dashboard, worker dashboard, user dashboards, and payment pages into reusable UI modules.
+
+\subsubsection*{3.2.4 Development Environment and Tools}
+\textbf{Visual Studio Code (VS Code):}\\
+Integrated development environment (IDE) supporting efficient coding practices and debugging.
+
+\textbf{Git and GitHub:}\\
+Version control and collaborative project management.
+
+\textbf{Postman:}\\
+API endpoint testing, ensuring correct functionality and performance of backend routes.
+
+\subsubsection*{3.2.5 Testing and Debugging}
+\textbf{Manual API Testing:}\\
+API routes were tested using tools such as Postman to verify request handling, response structure, and endpoint behavior.
+
+\textbf{Browser Developer Tools:}\\
+Frontend debugging, network inspection, and interface validation to ensure a responsive user experience.
+
+\textbf{Component and Workflow Validation:}\\
+System workflows such as image upload, session creation, fee calculation, payment updates, and reporting were verified step by step during development.
+
+\subsubsection*{3.2.6 Backend Architecture and Design Methods}
+\textbf{Service Layer Architecture:}\\
+Business logic is separated into service classes such as \texttt{SessionService}, \texttt{ZoneService}, \texttt{ReportingService}, \texttt{FeeCalculationService}, and \texttt{PlateDetectionService}.\\
+This improves maintainability, reusability, and separation of concerns.
+
+\textbf{Repository Pattern:}\\
+Repository classes such as \texttt{SessionRepository}, \texttt{ZoneRepository}, and \texttt{VehicleRepository} are used to isolate database access logic from business logic, while some payment and staff workflows access the database through dedicated API modules.
+
+\textbf{Layered Backend Design:}\\
+The backend is organized into Controllers, Services, and Repositories.\\
+This layered design makes the system easier to test, debug, and extend in future development.
+
+\subsubsection*{3.2.7 Database and Data Management}
+\textbf{SQLite / Relational Database Storage:}\\
+Stores parking sessions, vehicles, zones, payments, worker fines, user messages, and zone-related configuration in a structured form.
+
+\textbf{Structured Entity Modeling:}\\
+Core entities such as \texttt{User}, \texttt{ParkingZone}, \texttt{Vehicle}, \texttt{ParkingSession}, \texttt{Payment}, \texttt{WorkerFine}, and \texttt{UserMessage} define the internal data structure of the application.
+
+
+
+\ThesisSection{Key Functionalities}
+
+The following functionalities constitute the core features of the Smart Parking System:
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+    \item \textbf{Parking Session Management:} \\
+    Automatically creates, updates, and closes parking sessions using vehicle plate recognition and user input. Ensures accurate tracking of parking duration and session status.
+
+    \item \textbf{Number Plate Recognition:} \\
+    Supports image-based vehicle plate detection and recognition, reducing manual data entry and improving operational efficiency.
+
+    \item \textbf{Dynamic Fee Calculation:} \\
+    Calculates parking fees based on zone configuration, duration of stay, and predefined system parameters.
+
+    \item \textbf{Multi-Role System Access:} \\
+    Provides different functionalities for Users, Workers, and Admins, ensuring controlled access to system operations.
+
+    \item \textbf{Zone Management:} \\
+    Allows administrators to add, update, delete, and view parking zones along with their respective configurations.
+
+    \item \textbf{Payment and Fine Handling:} \\
+    Enables marking sessions as paid, unpaid, or overdue, and supports worker-issued fines and repeat-session penalty tracking.
+
+    \item \textbf{Reporting and Monitoring:} \\
+    Generates revenue and session-status reports, providing insights into system usage and operational performance.
+\end{enumerate}
+
+\ThesisSection{Backend Structure and API Endpoints}
+
+The backend of the Smart Parking Project is implemented using FastAPI. It exposes route groups for authentication, sessions, zones, vehicles, payments, uploads, and reporting. The following endpoints represent the most important backend functions of the system.
+
+\textbf{1. User Registration Endpoint (\texttt{/auth/register}):}
+
+This endpoint creates a new account and assigns the requested role. It also validates the special authorization code when an administrator or worker account is created.
+
+\textbf{Sample Request:}
+\begin{verbatim}
+POST /auth/register
+{
+  "name": "Ali Example",
+  "email": "ali@example.com",
+  "password": "secret123",
+  "role": "user",
+  "authorization_code": ""
+}
+\end{verbatim}
+
+\textbf{2. User Login Endpoint (\texttt{/auth/login}):}
+
+This endpoint authenticates a user and returns the user identifier, name, email, and role used by the frontend for role-based navigation.
+
+\textbf{Sample Request:}
+\begin{verbatim}
+POST /auth/login
+{
+  "email": "ali@example.com",
+  "password": "secret123"
+}
+\end{verbatim}
+
+\textbf{Sample Response:}
+\begin{verbatim}
+{
+  "user_id": "7f0c...",
+  "name": "Ali Example",
+  "email": "ali@example.com",
+  "role": "user"
+}
+\end{verbatim}
+
+\textbf{3. Create Parking Session Endpoint (\texttt{/sessions/}):}
+
+This endpoint starts a new parking session for a selected plate number and parking zone. It can also receive the acting user and role when the session is created from a role-based dashboard.
+
+\textbf{Sample Request:}
+\begin{verbatim}
+POST /sessions/
+{
+  "plate_number": "ABC-1234",
+  "zone_id": "Z_001",
+  "user_id": "user-001",
+  "user_role": "user"
+}
+\end{verbatim}
+
+\textbf{4. Close Parking Session Endpoint (\texttt{/sessions/\{session\_id\}/close}):}
+
+This endpoint closes an active parking session, applies the fee-calculation rules, and returns the updated session details.
+
+\textbf{Sample Request:}
+\begin{verbatim}
+PUT /sessions/SESSION-001/close
+{
+  "user_id": "user-001",
+  "user_role": "user"
+}
+\end{verbatim}
+
+\textbf{5. List Parking Sessions Endpoint (\texttt{/sessions/}):}
+
+This endpoint returns session records and supports optional filtering through query parameters such as date range, role, user identifier, and plate number.
+
+\textbf{Sample Request:}
+\begin{verbatim}
+GET /sessions/?date_from=2025-04-01&date_to=2025-04-30&role=admin
+\end{verbatim}
+
+\textbf{6. Zone Management Endpoints (\texttt{/zones/}):}
+
+These endpoints allow the frontend to list, create, update, and delete parking zones used by the Budapest district-based configuration.
+
+\textbf{Sample Requests:}
+\begin{verbatim}
+GET /zones/
+POST /zones/
+PUT /zones/Z_001
+DELETE /zones/Z_001
+\end{verbatim}
+
+\textbf{7. Vehicle Management Endpoints (\texttt{/vehicles/}):}
+
+These endpoints list vehicles, return vehicle details, create new vehicle records, and remove vehicles when necessary.
+
+\textbf{Sample Requests:}
+\begin{verbatim}
+GET /vehicles/?user_id=user-001&role=user
+GET /vehicles/ABC-1234/details?user_id=user-001&role=user
+POST /vehicles/
+DELETE /vehicles/ABC-1234
+\end{verbatim}
+
+\textbf{8. Plate Upload Endpoint (\texttt{/upload/plate-image}):}
+
+This endpoint receives an uploaded image, processes it through the OCR / detection module, and returns the detected plate text together with confidence and validity information.
+
+\textbf{Sample Response:}
+\begin{verbatim}
+{
+  "plate_text": "ABC-1234",
+  "confidence": 0.95,
+  "valid": true
+}
+\end{verbatim}
+
+{\sloppy\textbf{9. Payment Endpoints (\texttt{/payments/pay}, \texttt{/payments\-/checkout\-active}, \texttt{/payments\-/pay\-all}):}\par}
+
+{\sloppy These endpoints support paying selected sessions, checking out an active session directly, and paying all unpaid sessions for a plate number. Additional routes such as \texttt{/payments\-/notices}, \texttt{/payments\-/admin\-records}, and \texttt{/payments\-/congestion} provide monitoring-oriented data.\par}
+
+{\sloppy\textbf{10. Reporting Endpoints (\texttt{/reports\-/revenue\-by\-zone}, \texttt{/reports\-/revenue\-summary}):}\par}
+
+These endpoints return aggregated revenue data and overall payment-status summaries used by the reporting dashboard.
+
+\ThesisSection{Frontend Component Structure}
+
+The frontend of the Smart Parking System is developed using React and Vite, following a modular and component-based architecture.
+
+\textbf{Key Components:}
+
+\begin{enumerate}[leftmargin=2em,label=\arabic*.]
+    \item \textbf{Session Management Component:} \\
+    Handles creation, editing, viewing, and closing of parking sessions. Communicates with backend APIs to update session data.
+
+    \item \textbf{Image Upload Component:} \\
+    Allows users or workers to upload vehicle images for plate recognition.
+
+    \item \textbf{Authentication Component:} \\
+    Manages user login and logout functionalities and controls access to system features.
+
+    \item \textbf{Zone Management Component:} \\
+    Enables administrators to manage parking zones, including adding, updating, and deleting zones.
+
+    \item \textbf{Payment Component:} \\
+    Displays fee details and allows marking sessions as paid, unpaid, or overdue.
+
+    \item \textbf{Reporting Dashboard:} \\
+    Visualizes system data such as revenue, session status, and zone activity through charts and summary views.
+\end{enumerate}
+
+
+\ThesisSection{Development Environment Setup}
+
+1. Backend Setup: \\
+Python environment setup (\texttt{python -m venv venv}, \texttt{pip install -r requirements-ci.txt}). \\
+FastAPI server execution (\texttt{uvicorn app.main:app --reload}). \\
+The backend also includes image-processing dependencies such as OpenCV, EasyOCR, and Ultralytics YOLO for license plate detection and recognition.
+
+2. Frontend Setup: \\
+Node.js and npm installation (required for running the frontend application). \\
+Frontend dependency installation (\texttt{npm install}). \\
+Configure backend URL or other local settings in the frontend environment file if required. \\
+Frontend application startup (\texttt{npm run dev}).
+
+\ThesisSection{Image Detection and Processing Logic}
+
+The license plate detection logic is implemented in the \texttt{PlateDetectionService} class. The two-stage pipeline first uses YOLOv8 to localize the plate region within an uploaded image and then passes the cropped region to EasyOCR for text recognition. The full implementation is shown across the following two figures.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{Images/image_detection1.png}
+    \caption{Plate detection code}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{Images/image_detection2.png}
+    \caption{Code continued}
+\end{figure}
+
+
+\ThesisSection{System Advantages}
+
+\begin{enumerate}
+    \item \textbf{Automated Plate Detection:}
+    \begin{itemize}
+        \item The system reduces manual vehicle number entry by using image-based plate recognition.
+    \end{itemize}
+
+    \item \textbf{Real-Time Parking Operations:}
+    \begin{itemize}
+        \item Parking sessions, vehicle entry, and exit operations are handled quickly and efficiently.
+    \end{itemize}
+
+    \item \textbf{Role-Based Access Control:}
+    \begin{itemize}
+        \item Separate roles for admin, worker, and user improve security and system organization.
+    \end{itemize}
+
+    \item \textbf{Scalable and Maintainable:}
+    \begin{itemize}
+        \item The structured backend and frontend design make the system easier to maintain and extend.
+    \end{itemize}
+
+    \item \textbf{Intuitive User Interface:}
+    \begin{itemize}
+        \item A simple and responsive interface makes the system easy to use for different users.
+    \end{itemize}
+
+    \item \textbf{Efficient Data Management:}
+    \begin{itemize}
+        \item The system manages vehicles, zones, sessions, and payments in an organized way.
+    \end{itemize}
+\end{enumerate}
+
+
+\ThesisSection{UML Diagrams}
+
+\subsubsection*{3.9.1 Class Diagram}
+
+\begin{figure}[H]
+    \includegraphics[width=0.98\textwidth,height=3.9\textheight,keepaspectratio]{Images/UML.png}
+    \caption{Class Diagram}
+\end{figure}
+
+The following relationships define the structural interactions among various components of the Smart Parking System:
+
+\begin{enumerate}
+    \item \textbf{Composition}
+    \begin{itemize}
+        \item \textbf{ParkingDashboard is composed of SessionSummary.}
+
+        The \texttt{SessionSummary} component is closely connected to the \texttt{ParkingDashboard} and is used to display summarized session-related information directly inside the main dashboard view.
+
+        \item \textbf{ParkingSession is associated with Payment generation.}
+
+        A \texttt{ParkingSession} may produce a \texttt{Payment} record when parking activity is completed and the fee is calculated. This relationship connects the operational parking workflow with the financial part of the system.
+    \end{itemize}
+
+    \item \textbf{Dependency}
+    \begin{itemize}
+        \item \textbf{ParkingDashboard depends on FastAPI.}
+
+        The frontend dashboard sends API requests to the backend and depends on the FastAPI layer to retrieve and update parking-related data.
+
+        \item \textbf{SessionController depends on SessionService.}
+
+        The \texttt{SessionController} forwards requests related to session creation, closing, and viewing to the service layer, where the main business logic is handled.
+
+        \item \textbf{ZoneController depends on ZoneService.}
+
+        The \texttt{ZoneController} relies on the \texttt{ZoneService} for adding, updating, deleting, and listing parking zones.
+
+        \item \textbf{Payment routes depend on database-access helpers and session data.}
+
+        The payment modules use stored session information and database queries to complete checkout, pay unpaid sessions, and return notices or monitoring summaries.
+
+        \item \textbf{SessionService depends on PlateDetectionService and FeeCalculationService.}
+
+        The \texttt{SessionService} relies on fee-calculation support for determining parking costs and interacts with related session-validation helpers during parking operations.
+
+        \item \textbf{PlateDetectionService depends on YOLOv8 and OCR libraries.}
+
+        The \texttt{PlateDetectionService} uses Ultralytics YOLOv8 for plate-region detection and EasyOCR for text recognition, together with OpenCV for image decoding and cropping.
+    \end{itemize}
+
+    \item \textbf{Aggregation}
+    \begin{itemize}
+        \item \textbf{ParkingDashboard aggregates Navbar and Footer components.}
+
+        The \texttt{Navbar} and \texttt{Footer} are reusable interface components that support navigation and layout across the frontend. They are used by the dashboard but can also exist independently in other pages.
+
+        \item \textbf{FastAPI aggregates multiple controllers.}
+
+        The backend routing layer connects with \texttt{SessionController}, \texttt{ZoneController}, and \texttt{PaymentController}, each of which handles a specific part of the parking workflow.
+    \end{itemize}
+
+    \item \textbf{Association}
+    \begin{itemize}
+        \item \textbf{Vehicle is associated with ParkingSession.}
+
+        A vehicle can be linked with multiple parking sessions, while each parking session belongs to a specific vehicle.
+
+        \item \textbf{ParkingZone is associated with ParkingSession.}
+
+        Each parking session is assigned to a parking zone, which allows the system to connect parking activity with a district or zone-based structure.
+
+        \item \textbf{Repositories are associated with SQLiteDB.}
+
+        The \texttt{SessionRepository}, \texttt{ZoneRepository}, and \texttt{VehicleRepository} interact with \texttt{SQLiteDB} to store and retrieve the corresponding data objects.
+
+        \item \textbf{Repositories are associated with domain entities.}
+
+        The repositories manage the persistence of \texttt{ParkingSession}, \texttt{ParkingZone}, and \texttt{Payment} objects, ensuring that system data remains organized and accessible across operations.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection*{3.9.2 Use Case Diagram}
+
+\begin{figure}[H]
+    \includegraphics[width=0.98\textwidth,height=2.1\textheight,keepaspectratio]{Images/use_case.png}
+    \caption{Use Case Diagram}
+\end{figure}
+
+\subsubsection*{3.9.3 User Sequence Diagram}
+
+\begin{figure}[H]
+    \includegraphics[width=0.98\textwidth,height=0.95\textheight,keepaspectratio]{Images/user_sequence.png}
+    \caption{User Sequence Diagram}
+\end{figure}
+
+\ThesisSection{Developer Setup}
+
+This section provides a step-by-step guide for setting up the development environment for the Smart Parking System, covering prerequisites, backend and frontend configuration, and environment-related setup.
+
+\subsubsection*{3.10.1 Prerequisites}
+
+Before setting up the project, ensure the following tools and packages are installed:
+\begin{itemize}[leftmargin=2em]
+    \item Python 3.9+ -- required to run the FastAPI backend
+    \item pip -- Python package manager
+    \item Node.js and npm -- required for the frontend (React + Vite)
+    \item Git -- for cloning the repository
+    \item Postman (optional) -- for testing API endpoints
+\end{itemize}
+
+\subsubsection*{3.10.2 Clone the Repository}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Open a terminal or command prompt.
+    \item Navigate to the directory where you want to clone the project:
+\end{enumerate}
+
+\begin{verbatim}
+cd ~/projects
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{2}
+    \item Clone the Git repository:
+\end{enumerate}
+
+\begin{verbatim}
+git clone https://szofttech.inf.elte.hu/gnn/thesis/farid-md-farid.git
+cd farid-md-farid
+\end{verbatim}
+
+\subsubsection*{3.10.3 Setup Python Backend Environment}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Navigate to the backend folder:
+\end{enumerate}
+
+\begin{verbatim}
+cd backend
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{1}
+    \item Create a virtual environment:
+\end{enumerate}
+
+\begin{verbatim}
+python -m venv venv
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{2}
+    \item Activate the virtual environment:
+\end{enumerate}
+
+\begin{verbatim}
+# Linux/macOS
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{3}
+    \item Install the required Python dependencies:
+\end{enumerate}
+
+\begin{verbatim}
+pip install -r requirements-ci.txt
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{4}
+    \item Start the FastAPI backend server:
+\end{enumerate}
+
+\begin{verbatim}
+uvicorn app.main:app --reload
+\end{verbatim}
+
+\subsubsection*{3.10.4 Setup Frontend Environment}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Open a new terminal and navigate to the frontend folder:
+\end{enumerate}
+
+\begin{verbatim}
+cd frontend
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{1}
+    \item Install frontend dependencies:
+\end{enumerate}
+
+\begin{verbatim}
+npm install
+\end{verbatim}
+
+\begin{enumerate}[leftmargin=2em]
+    \setcounter{enumi}{2}
+    \item Start the frontend development server:
+\end{enumerate}
+
+\begin{verbatim}
+npm run dev
+\end{verbatim}
+
+\subsubsection*{3.10.5 Configure Environment Variables}
+
+The current local development setup does not require mandatory custom environment variables. In development mode, the frontend uses the local backend address automatically, and the backend runs with the default local database file. If needed for deployment or future extension, a \texttt{.env} or \texttt{.env.local} file can be added to store configuration values such as API base URLs or deployment-specific settings.
+
+
+
+\ThesisSection{Interactions and Workflow}
+
+This section outlines how the main parts of the Smart Parking System interact during normal system usage.
+
+\subsubsection*{3.11.1 User Interaction Flow}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Login and Access Control:}
+    The user enters login credentials through the frontend interface. The request is sent to the backend, where the account is verified and the correct role-based dashboard is returned.
+
+    \item \textbf{Parking Session Operations:}
+    A user can register a vehicle, select a parking zone, and start or close a parking session. The frontend sends these requests to the backend, where the session data is validated and stored.
+
+    \item \textbf{Worker Verification Flow:}
+    A worker can enter a plate number manually or upload a vehicle image. The backend checks the session status of the detected plate and returns the result for further action.
+
+    \item \textbf{Administrative Monitoring:}
+    The admin can review zones, users, workers, reports, sessions, and payment-related records through management pages connected to the backend services.
+\end{itemize}
+
+\subsubsection*{3.11.2 Backend Processing Flow}
+
+\begin{itemize}[leftmargin=2em]
+    \item The FastAPI backend receives requests from the frontend and validates them using the corresponding schemas.
+
+    \item The request is forwarded to the appropriate service layer, such as session, vehicle, zone, payment, reporting, or plate-detection services.
+
+    \item Repository classes interact with the SQLite database to store and retrieve the required records.
+
+    \item In the image upload workflow, the \texttt{PlateDetectionService} decodes the uploaded image, runs YOLOv8 to localize plate regions, applies EasyOCR to the cropped region for text extraction, validates the plate format, and returns the most confident valid result.
+
+    \item The backend sends structured JSON responses back to the frontend for display and further actions.
+\end{itemize}
+
+\subsubsection*{3.11.3 Frontend Display and Feedback}
+
+\begin{itemize}[leftmargin=2em]
+    \item The frontend receives backend responses and updates the interface dynamically according to the returned data.
+
+    \item Users can view vehicles, sessions, notices, payments, and profile-related information through dedicated pages.
+
+    \item Workers can view verification results, including detected plate text, confidence value, and session status.
+
+    \item Administrators can view reports, zone information, worker data, user records, and financial summaries in a structured form.
+
+    \item The interface is role-based and responsive, allowing the system to present different workflows clearly for user, worker, and admin roles.
+\end{itemize}
+
+\subsubsection*{3.11.4 Directory Structure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth,height=0.85\textheight,keepaspectratio]{Images/frontend.png}
+    \caption{Directory Structure}
+\end{figure}
+
+\begin{figure}[H]
+    \ContinuedFloat
+    \centering
+    \includegraphics[width=0.75\textwidth,height=0.85\textheight,keepaspectratio]{Images/backend.png}
+    \caption{Directory Structure (continued)}
+\end{figure}
+
+
+\ThesisSection{Core Components}
+
+This section describes the core modules and functionalities implemented in the Smart Parking System. The system is built using FastAPI for the backend, React and Vite for the frontend, SQLite for local structured data storage, and OCR-related tools for image-based number plate processing.
+
+\subsubsection*{3.12.1 Session and Fee Management Module}
+
+The \texttt{session\_service.py} module is one of the most important backend components of the system. It controls the lifecycle of a parking session, starting from session creation and continuing through quote generation, active session monitoring, and final session closure.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Vehicle and Zone Validation:} Before a session is created, the service checks whether the selected vehicle exists, whether it is linked to the correct user account, and whether the selected parking zone is valid.
+
+    \item \textbf{Session Creation and Active Session Checks:} The service creates a unique session identifier, stores the entry timestamp, and prevents duplicate active sessions for the same plate number.
+
+    \item \textbf{Fee Calculation Support:} The \texttt{FeeCalculationService} calculates the parking amount using zone-based configuration values such as hourly rate, peak-time multiplier, overstay multiplier, grace period, and repeat-session penalty.
+
+    \item \textbf{Session Finalization:} When a session is closed, the backend computes the final parking fee, duration, penalty values, and updated status before saving the completed session record.
+\end{itemize}
+
+\subsubsection*{3.12.2 FastAPI Server and API Routing}
+
+The backend server is implemented in \texttt{main.py} using FastAPI. This server acts as the central API layer of the Smart Parking System and connects the different functional modules through dedicated controllers and routers.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Router Integration:} The main FastAPI application includes routers for authentication, parking sessions, zones, vehicles, uploads, reports, and payments.
+
+    \item \textbf{Structured API Design:} Controllers such as \texttt{session\_\allowbreak controller.py}, \texttt{zone\_\allowbreak controller.py}, \texttt{vehicle\_\allowbreak controller.py}, \texttt{payment\_\allowbreak controller.py}, and \texttt{upload\_\allowbreak controller.py} organize route handling clearly according to system responsibility.
+
+    \item \textbf{Schema Validation:} Request models inside \texttt{schemas.py} validate values such as plate numbers, zone identifiers, payment requests, and role-based request fields before the business logic is executed.
+
+    \item \textbf{Frontend Communication:} The backend returns structured JSON responses which are used by the frontend pages to display sessions, fees, payment results, OCR output, and administrative records.
+\end{itemize}
+
+\subsubsection*{3.12.3 Frontend Interface (React + Vite)}
+
+The frontend of the Smart Parking System is implemented using React with Vite. The user interface is page-based and role-oriented, allowing users, workers, and administrators to access different workflows through a consistent web environment.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Role-Based Pages:} {\sloppy The \texttt{pages} directory contains dedicated pages such as \texttt{User\-Dashboard\-Page.jsx}, \texttt{Worker\-Dashboard\-Page.jsx}, \texttt{Admin\-Dashboard\-Page.jsx}, \texttt{Sessions\-Page.jsx}, \texttt{Payment\-Page.jsx}, \texttt{Reports\-Page.jsx}, and \texttt{Upload\-Image\-Page.jsx}.\par}
+
+    \item \textbf{Authentication State Handling:} The \texttt{AuthContext.jsx} module manages login state and role-specific frontend behavior.
+
+    \item \textbf{API Communication Layer:} The \texttt{ApiClient.js} file provides the frontend methods used to communicate with backend endpoints for vehicles, sessions, payments, reports, and image upload.
+
+    \item \textbf{Responsive User Experience:} The interface updates dynamically according to backend responses, which allows users to review current sessions, payment states, reports, worker checks, and other parking-related information in a structured way.
+\end{itemize}
+
+\subsubsection*{3.12.4 Plate Detection and Image Upload Module}
+
+The image upload and OCR-related module allows the system to process uploaded vehicle images and extract a likely number plate value. This component is especially useful in worker verification workflows. It follows a two-stage pipeline: a YOLOv8 detector first localizes the plate region, and EasyOCR then reads the text from the cropped region.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Upload Endpoint:} The \texttt{upload\_controller.py} file receives the uploaded image from the frontend through the \texttt{/upload/plate-image} endpoint.
+
+    \item \textbf{Plate Detection Service:} The \texttt{PlateDetectionService} decodes raw image bytes using OpenCV, runs a license-plate-specific YOLOv8 model to detect plate bounding boxes, crops each detected region, and applies EasyOCR to read the text from the crop. The recognized text is validated against a plate-format regular expression.
+
+    \item \textbf{Stage 1 -- Plate Localization:} YOLOv8 returns one or more bounding boxes for plate regions in the uploaded image. Boxes below a configurable confidence threshold are ignored to reduce false positives.
+
+    \item \textbf{Stage 2 -- Text Recognition:} For each accepted bounding box, the service crops the plate region (with a small padding) and passes only that crop to EasyOCR. Running OCR on the cropped plate, rather than the whole image, improves recognition accuracy and reduces noise from background text.
+
+    \item \textbf{Graceful Fallback:} If YOLO returns no detections, the service falls back to running EasyOCR on the full image. This ensures the pipeline still produces a result when the detector misses, preserving robustness during real-world use.
+
+    \item \textbf{Confidence-Based Selection:} If multiple OCR results are returned, the service keeps the valid plate with the highest confidence score.
+
+    \item \textbf{Returned Detection Result:} The service returns a structured response containing \texttt{plate\_text}, \texttt{confidence}, and a \texttt{valid} flag, which the frontend can display directly to the worker.
+\end{itemize}
+
+\subsubsection*{3.12.5 Payment, Messaging, and Worker Fine Workflow}
+
+The system also contains supporting operational modules for payment handling, user notices, staff messaging, and worker-issued fines. These modules connect the parking workflow with financial and supervisory actions.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Payment Processing:} The payment routes support paying selected sessions, checking out an active session directly, and paying all unpaid sessions for a plate number.
+
+    \item \textbf{Notice and Monitoring Support:} The payment-notice module returns unpaid session summaries, threshold-based penalty warnings, and notice information for users and administrators.
+
+    \item \textbf{Worker Fine Logic:} The worker routes verify whether a scanned vehicle already has an active parking session. If no active session exists, the backend can create a worker fine record for the registered vehicle owner.
+
+    \item \textbf{Staff Messaging:} Admins and workers can send direct system messages to users, and the system stores both received and sent messages as part of the account-related data.
+\end{itemize}
+
+\subsubsection*{3.12.6 Supporting Repositories and Database Layer}
+
+The supporting data layer of the project is organized through repositories and a shared database module. This structure separates persistence logic from the service layer and helps keep the backend easier to maintain.
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Database Access:} The \texttt{database.py} module provides the SQLite connection used across the backend.
+
+    \item \textbf{Repository Classes:} Repository modules such as \texttt{session\_\allowbreak repository.py}, \texttt{vehicle\_\allowbreak repository.py}, and \texttt{zone\_\allowbreak repository.py} handle direct data access for the main entities of the application.
+
+    \item \textbf{Structured Data Models:} The project stores users, vehicles, parking sessions, payments, worker fines, messages, and zone-related configuration in a structured relational format.
+
+    \item \textbf{Separation of Concerns:} By dividing the backend into controllers, services, repositories, and schemas, the system becomes easier to test, debug, and extend in future development.
+\end{itemize}
+
+
+\ThesisSection{Testing}
+
+To ensure the reliability, correctness, and stability of the Smart Parking System, two key testing tools were utilized throughout development:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Pytest:} Used for validating backend logic, service behavior, repository operations, schema validation, and API workflows.
+    \item \textbf{Postman:} Used for endpoint testing, request and response validation, and end-to-end API checking.
+\end{itemize}
+
+In addition to these tools, selected frontend pages and API communication helpers were also checked with Vitest and Testing Library during development. However, the main testing documentation below focuses on the backend and API testing workflow in the same style as the sample documentation.
+
+\subsubsection*{3.13.1 Testing using Pytest}
+
+Pytest was used to perform unit and functional tests on the FastAPI backend. The tested areas include authentication, worker enforcement flows, parking session lifecycle, zone validation, payment processing, reporting, image upload, OCR-based plate recognition, schema validation, and database initialization.
+
+\texttt{test\_plate\_detection\_service.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_plate\_detection\_with\_yolo\_crop()} \\
+    \textbf{Purpose:} Validates the main two-stage pipeline where YOLO detects a plate region and EasyOCR reads text from the cropped image. \\
+    \textbf{Assertions:} Ensures that the service returns the highest-confidence valid plate string from the OCR results on the YOLO crop.
+
+    \item \textbf{test\_plate\_detection\_falls\_back\_to\_whole\_image\\
+    \_when\_yolo\_finds\_nothing()} \\
+    \textbf{Purpose:} Validates the graceful fallback path. \\
+    \textbf{Assertions:} Ensures that when YOLO returns no detections, the service falls back to running EasyOCR on the full image and still recognizes a valid plate.
+
+    \item \textbf{test\_plate\_detection\_returns\_invalid\_when\_no\_plate\_text()} \\
+    \textbf{Purpose:} Validates the no-plate-found path. \\
+    \textbf{Assertions:} Ensures that when neither YOLO nor the fallback OCR produce a plate-shaped string, the service returns \texttt{valid: False} with no plate text.
+
+    \item \textbf{test\_plate\_detection\_raises\_on\_invalid\_image()} \\
+    \textbf{Purpose:} Validates input handling for corrupted or unreadable images. \\
+    \textbf{Assertions:} Ensures the service raises \texttt{ValueError} when OpenCV fails to decode the uploaded image bytes.
+
+    \item \textbf{test\_yolo\_low\_confidence\_box\_is\_ignored()} \\
+    \textbf{Purpose:} Validates the YOLO confidence threshold filter. \\
+    \textbf{Assertions:} Ensures that YOLO detections below the configured confidence threshold are discarded, and that the fallback OCR path is used instead.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{Images/testing_plate1.png}
+    \caption{Pytest test code}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{Images/testing_plate2.png}
+    \caption{Test code continued}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{Images/testing_plate3.png}
+    \caption{Pytest result}
+\end{figure}
+
+
+\texttt{test\_upload\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_upload\_plate\_image\_endpoint(client, monkeypatch)} \\
+    \textbf{Purpose:} Tests the upload endpoint used for plate-image submission. \\
+    \textbf{Assertions:} Confirms that the uploaded image is accepted correctly and that the API returns a plate text, confidence value, and valid status.
+\end{itemize}
+
+
+\texttt{test\_session\_service.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_session\_service\_quote\_create\_finalize\_close\_and\_enrich(seed\_data)} \\
+    \textbf{Purpose:} Validates the complete lifecycle of parking sessions. \\
+    \textbf{Assertions:} Verifies ownership checks, quote generation, session creation, fee finalization, role-based close permissions, and validation of invalid timestamps or missing sessions.
+\end{itemize}
+
+\texttt{test\_zone\_service.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_zone\_service\_validation\_and\_crud(seed\_data)} \\
+    \textbf{Purpose:} Tests zone validation together with create, read, update, and delete operations. \\
+    \textbf{Assertions:} Ensures valid zones are stored correctly and invalid zone configurations are rejected.
+\end{itemize}
+
+\texttt{test\_fee\_calculation\_service.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_fee\_calculation\_helpers\_and\_paths()} \\
+    \textbf{Purpose:} Verifies the helper methods and fee calculation rules used during parking checkout. \\
+    \textbf{Assertions:} Confirms minimum-fee handling, peak-hour detection, overstay charges, repeat penalties, and the correctness of the final fee formula.
+\end{itemize}
+
+\texttt{test\_auth\_accounts\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_auth\_register\_login\_users\_and\_summary(client, seed\_data)} \\
+    \textbf{Purpose:} Tests registration, login, user listing, and summary retrieval. \\
+    \textbf{Assertions:} Checks role-based registration rules, duplicate-account rejection, login success and failure cases, and the correctness of returned user statistics.
+\end{itemize}
+
+\texttt{test\_auth\_staff\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_staff\_messages\_worker\_fines\_and\_listing(client, seed\_data)} \\
+    \textbf{Purpose:} Validates admin messaging and worker fine workflows. \\
+    \textbf{Assertions:} Ensures only authorized roles can send messages, verifies worker scan-and-fine behavior, checks duplicate fine prevention, and confirms fine-notification delivery.
+\end{itemize}
+
+\texttt{test\_vehicle\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_vehicle\_endpoints(client, seed\_data)} \\
+    \textbf{Purpose:} Tests vehicle listing, lookup, detail retrieval, creation, and deletion. \\
+    \textbf{Assertions:} Confirms role-based visibility, owner-restricted access, summary generation, plate normalization, duplicate prevention, and deletion behavior.
+\end{itemize}
+
+\texttt{test\_payments\_transactions\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_payment\_transaction\_endpoints(client, seed\_data)} \\
+    \textbf{Purpose:} Tests payment-related transaction endpoints. \\
+    \textbf{Assertions:} Verifies single-session payment, active-session checkout, payment history retrieval, unpaid-session lookup, penalty checks, and full payment by plate.
+\end{itemize}
+
+\texttt{test\_payments\_notices\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{test\_payment\_notices\_and\_monitoring\_endpoints(client, seed\_data)} \\
+    \textbf{Purpose:} Tests payment notices, admin records, congestion data, and penalty-related monitoring. \\
+    \textbf{Assertions:} Ensures generated notices are returned correctly for users and admins, confirms admin payment records, and validates congestion summaries.
+\end{itemize}
+
+\texttt{test\_report\_api.py} and \texttt{test\_reporting\_service.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Purpose:} Validate reporting endpoints and reporting-service summaries. \\
+    \textbf{Assertions:} Confirm revenue-by-zone output, paid/unpaid/overdue counts, total revenue summary, and filtered session reporting by date range and role.
+\end{itemize}
+
+\texttt{test\_database.py} and \texttt{test\_schemas.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Purpose:} Validate database initialization, seed data, and request schema rules. \\
+    \textbf{Assertions:} Ensure the database is created correctly, Budapest zones and admin data are seeded, and invalid schema input is rejected through validation.
+\end{itemize}
+
+\texttt{test\_health\_api.py}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Purpose:} Checks whether the health endpoint responds correctly for basic service monitoring. \\
+    \textbf{Assertions:} Confirms that the backend reports a healthy status when the application is running.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/coverage.png}
+    \caption{Total coverage}
+\end{figure}
+
+
+\subsubsection*{3.13.2 API Testing Using Postman}
+
+Postman was used extensively during development to test and verify API functionality, including input and output behavior, response structure, validation errors, and endpoint integration. It was particularly useful for checking the communication between the React frontend and the FastAPI backend.
+
+\textbf{Prerequisites}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{API Running Locally:} FastAPI server running at \texttt{http://127.0.0.1:8000}
+    \item \textbf{Postman Installed:} Postman desktop application available for sending requests
+    \item \textbf{Database Ready:} Local database initialized with the required schema and sample data
+\end{itemize}
+
+\textbf{Base URL}
+\begin{verbatim}
+http://127.0.0.1:8000
+\end{verbatim}
+
+\paragraph{3.13.2.1 Authentication Endpoints}
+
+\textbf{1. Register User}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/auth/register}
+    \item \textbf{Method:} POST
+    \item \textbf{Headers:} \texttt{Content-Type: application/json}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/register_test.png}
+    \caption{User Registration Test}
+\end{figure}
+
+\textbf{2. Login User}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/auth/login}
+    \item \textbf{Method:} POST
+    \item \textbf{Headers:} \texttt{Content-Type: application/json}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/login_test.png}
+    \caption{User Login Test}
+\end{figure}
+
+
+
+
+\paragraph{3.13.2.2 Parking and Upload Endpoints}
+
+\textbf{1. Create Parking Session}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/sessions/}
+    \item \textbf{Method:} POST
+    \item \textbf{Headers:} \texttt{Content-Type: application/json}
+    \item \textbf{Body:}
+\end{itemize}
+\begin{verbatim}
+{
+  "plate_number": "ABC-123",
+  "zone_id": "D01",
+  "user_id": "user-001",
+  "user_role": "user"
+}
+\end{verbatim}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Expected Response:} Newly created session with active status.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/session_start_test.png}
+    \caption{Parking Session Creation Test}
+\end{figure}
+
+
+
+\textbf{2. Upload Plate Image}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/upload/plate-image}
+    \item \textbf{Method:} POST
+    \item \textbf{Body Type:} \texttt{form-data}
+    \item \textbf{Field:} \texttt{file} = image file
+    \item \textbf{Expected Response:} JSON response containing \texttt{plate\_text}, \texttt{confidence}, and \texttt{valid}.
+\end{itemize}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/upload_image_test.png}
+    \caption{Plate Image Upload Test}
+\end{figure} 
+
+\paragraph{3.13.2.3 Zone, Payment, and Report Endpoints}
+
+\textbf{1. Zone Management Test}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/zones/}
+    \item \textbf{Method:} POST
+    \item \textbf{Headers:} \texttt{Content-Type: application/json}
+    \item \textbf{Expected Response:} Created zone details returned after validation.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/zone_creation_test.png}
+    \caption{Zone Management Test}
+\end{figure} 
+
+
+\textbf{2. Payment Endpoint Test}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/payments/pay}
+    \item \textbf{Method:} POST
+    \item \textbf{Headers:} \texttt{Content-Type: application/json}
+    \item \textbf{Expected Response:} Payment summary with paid amount and receipt list.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/paymentdone_post_test.png}
+    \caption{Payment Test}
+\end{figure} 
+
+
+\textbf{3. Report Endpoint Test}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Endpoint:} \texttt{/reports/revenue-summary}
+    \item \textbf{Method:} GET
+    \item \textbf{Expected Response:} Aggregated revenue and status counters.
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/revenue_post_test.png}
+    \caption{Revenue Summary Test}
+\end{figure} 
+
+\paragraph{3.13.2.4 Error and Validation Tests}
+
+\textbf{1. Invalid Login Test}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Body:}
+\end{itemize}
+\begin{verbatim}
+{
+  "email": "ali@example.com",
+  "password": "wrong-password"
+}
+\end{verbatim}
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Expected Response:} Authentication failure message with the corresponding error status.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.85\textheight,keepaspectratio]{Images/Invalid login .png}
+    \caption{Invalid Login Test}
+\end{figure} 
+
+
+
+
+\ThesisChapter{Conclusion and future work}
+
+\ThesisSection{Conclusion}
+
+The Smart Parking System successfully delivers a structured and practical solution for managing modern parking operations. The project combines user authentication, role-based access, parking session handling, zone management, payments, reporting, and image-based plate recognition within a single full-stack application. Through the FastAPI backend, React frontend, and SQLite database, the system provides an organized environment for users, workers, and administrators to perform their tasks efficiently.
+
+The integration of parking workflows with OCR-based plate detection adds practical value to the application and shows how software engineering concepts can be applied to a real-world management problem. Overall, the project demonstrates that the Smart Parking System is functional, scalable, and suitable as a strong foundation for future development and deployment.
+
+\ThesisSection{Future Work}
+
+To further improve the functionality, security, and overall user experience of the platform, the following enhancements are proposed for future development:
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Token-Based Authentication}
+    Replace local session handling with a more secure token-based authentication mechanism.
+
+    \item \textbf{Improved Plate Detection Accuracy}
+    Enhance the image-processing pipeline by introducing better region detection and optimized OCR preprocessing.
+
+    \item \textbf{Online Payment Integration}
+    Connect the system with a real payment gateway to support secure and automated parking payments.
+
+    \item \textbf{Advanced Reporting and Analytics}
+    Add richer dashboards and analytical reports for parking usage, revenue trends, and worker activity.
+
+    \item \textbf{Production Database Support}
+    Replace SQLite with a more scalable database solution such as PostgreSQL for larger deployments.
+
+    \item \textbf{Notification and Alert System}
+    Introduce notifications for parking events, overdue payments, violations, and administrative updates.
+
+    \item \textbf{Deployment and Monitoring Improvements}
+    Extend the project with production-ready deployment, logging, and monitoring tools for long-term maintenance.
+\end{enumerate}
+
+\clearpage
+\phantomsection
+\chapter*{Bibliography}
+\markboth{Bibliography}{Bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}
+\thispagestyle{plain}
+
+\begingroup
+\fontsize{11}{12.6}\selectfont
+\setstretch{1.0}
+\setlength{\parskip}{0pt}
+\sloppy
+\Urlmuskip=0mu plus 2mu\relax
+
+\begin{enumerate}[leftmargin=1.9em,label=\arabic*.,labelsep=0.45em,itemsep=0.15em,topsep=0.1em,parsep=0pt,partopsep=0pt]
+    \item Joseph Redmon, Santosh Divvala, Ross Girshick, and Ali Farhadi. ``You Only Look Once: Unified, Real-Time Object Detection.'' In: \emph{arXiv} (2015). \url{https://arxiv.org/abs/1506.02640}.
+    \item Ultralytics. (2023). YOLOv8 -- Documentation for the YOLOv8 object detection model. Retrieved from \url{https://docs.ultralytics.com/models/yolov8/}.
+    \item Ultralytics. (2023). YOLOv8 Python Package and Pre-trained Models -- Official GitHub repository. Retrieved from \url{https://github.com/ultralytics/ultralytics}.
+    \item Satadal Saha. ``A Review on Automatic License Plate Recognition System.'' In: \emph{arXiv} (2019). \url{https://arxiv.org/abs/1902.09385}.
+    \item Rodrigo Laroca, Everson Severo, Luiz A. Zanlorensi, Luiz S. Oliveira, Gabriel R. Gonçalves, William R. Schwartz, and David Menotti. ``A Robust Real-Time Automatic License Plate Recognition Based on the YOLO Detector.'' In: \emph{International Joint Conference on Neural Networks (IJCNN)} (2018). \url{https://ieeexplore.ieee.org/document/8489629}.
+    \item Prapaporn Meesad, Sarayut Intarawiset, and Teerapat Khamket. ``Advanced Deep Learning Techniques for Automated License Plate Recognition.'' In: \emph{Scientific Reports} (2025). \url{https://www.nature.com/articles/s41598-025-24967-9}.
+    \item Jaided AI. (2024). EasyOCR -- Ready-to-use OCR with 80+ supported languages. Retrieved from \url{https://github.com/JaidedAI/EasyOCR}.
+    \item OpenCV. (2024). OpenCV -- Open Source Computer Vision Library. Retrieved from \url{https://opencv.org/}.
+    \item S. S. Channamallu, A. S. Fahim, and co-authors. ``A Review of Smart Parking Systems.'' In: \emph{Smart Cities} (2023). \url{https://www.sciencedirect.com/science/article/pii/S235214652301219X}.
+    \item Abdulaziz Alharbi, Hany M. Harb, and co-authors. ``Web-based Framework for Smart Parking System.'' In: \emph{International Journal of Information Technology} (2021). \url{https://link.springer.com/article/10.1007/s41870-021-00725-8}.
+    \item D. Mackowski, M. Bai, T. Ouyang, and H. M. Zhang. ``Parking Space Management via Dynamic Performance-Based Pricing.'' In: \emph{arXiv} (2015). \url{https://arxiv.org/abs/1501.00638}.
+    \item FastAPI. (2024). FastAPI -- Modern, fast (high-performance) web framework for building APIs with Python. Retrieved from \url{https://fastapi.tiangolo.com/}.
+    \item Pydantic. (2024). Pydantic -- Data validation using Python type hints. Retrieved from \url{https://docs.pydantic.dev/}.
+    \item React. (2024). React -- The library for web and native user interfaces. Retrieved from \url{https://react.dev/}.
+    \item SQLite. (2024). SQLite -- Self-contained, serverless, zero-configuration SQL database engine. Retrieved from \url{https://www.sqlite.org/docs.html}.
+    \item Charles R. Harris, K. Jarrod Millman, Stéfan J. van der Walt, et al. ``Array programming with NumPy.'' In: \emph{Nature} 585 (2020), pp. 357--362. \url{https://doi.org/10.1038/s41586-020-2649-2}.
+    \item Pytest. (2024). Pytest -- Helps you write better programs. Retrieved from \url{https://docs.pytest.org/}.
+    \item Vite. (2024). Vite -- Next Generation Frontend Tooling. Retrieved from \url{https://vite.dev/}.
+\end{enumerate}
+\endgroup
+
+\clearpage
+\phantomsection
+{\hypersetup{linkcolor=black}\listoffigures}
+\addcontentsline{toc}{chapter}{List of Figures}
+\clearpage
+\phantomsection
+\markboth{Acknowledgment}{Acknowledgment}
+\addcontentsline{toc}{chapter}{Acknowledgment}
+\thispagestyle{plain}
+
+\begin{center}
+\textbf{Acknowledgment}
+\end{center}
+
+\vspace{1.5em}
+
+\begingroup
+\large
+\setstretch{1.0}
+
+First and foremost, I would like to express my heartfelt gratitude to my supervisor, \textbf{Guettala Walid}, for his invaluable guidance throughout the course of this project. His deep expertise in the field, constructive feedback, and constant encouragement have been instrumental in shaping the direction and quality of this thesis. His dedication to mentoring and high standards of academic excellence have continuously inspired me to improve and strive for the best.
+
+I would also like to extend my sincere thanks to my family for their unconditional love, endless patience, and constant support. Their belief in me, especially during moments of challenge and doubt, has been the foundation of my resilience and determination. I am truly grateful for their presence, motivation, and sacrifices, which have empowered me to successfully complete this academic endeavour.
+
+This work is a reflection of the collective support, encouragement, and inspiration I have received from those around me. I am deeply thankful to everyone who played a role in this journey.
+\endgroup
+
+\end{document}

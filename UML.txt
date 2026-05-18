@@ -1,0 +1,491 @@
+@startuml
+title Smart Parking System - Class Diagram (React Client + Python REST API, Layered Backend)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+left to right direction
+
+'=========================================================
+' PRESENTATION LAYER (REACT - CLIENT)
+'=========================================================
+package "Frontend (React SPA)" {
+  class ReactApp
+  class AdminDashboardPage
+  class DriverDashboardPage
+  class UploadImagePage
+  class SessionsPage
+  class ZoneConfigPage
+  class ReportsPage
+
+  class ApiClient {
+    +baseUrl: String
+    +get(path): JSON
+    +post(path, body): JSON
+    +put(path, body): JSON
+    +delete(path): JSON
+  }
+
+  ReactApp *-- AdminDashboardPage
+  ReactApp *-- DriverDashboardPage
+  ReactApp *-- UploadImagePage
+  ReactApp *-- SessionsPage
+  ReactApp *-- ZoneConfigPage
+  ReactApp *-- ReportsPage
+
+  AdminDashboardPage ..> ApiClient : calls
+  DriverDashboardPage ..> ApiClient : calls
+  UploadImagePage ..> ApiClient : calls
+  SessionsPage ..> ApiClient : calls
+  ZoneConfigPage ..> ApiClient : calls
+  ReportsPage ..> ApiClient : calls
+}
+
+'=========================================================
+' API LAYER (CONTROLLERS - BACKEND)
+'=========================================================
+package "Backend (Python) - API Layer (Controllers)" {
+  class AuthController {
+    +POST /auth/login()
+    +POST /auth/logout()
+  }
+
+  class PlateController {
+    +POST /plate/recognize(image)
+  }
+
+  class SessionController {
+    +POST /sessions()
+    +PUT /sessions/{id}/close()
+    +GET /sessions()
+    +PUT /sessions/{id}()
+  }
+
+  class PaymentController {
+    +PUT /sessions/{id}/mark-paid()
+    +PUT /sessions/{id}/mark-unpaid()
+    +PUT /sessions/{id}/mark-overdue()
+  }
+
+  class ZoneController {
+    +POST /zones()
+    +PUT /zones/{id}()
+    +DELETE /zones/{id}()
+    +GET /zones()
+  }
+
+  class ConfigController {
+    +GET /config()
+    +PUT /config()
+  }
+
+  class ReportController {
+    +GET /reports/revenue()
+    +GET /reports/violations()
+    +GET /reports/export()
+  }
+}
+
+ApiClient ..> AuthController : HTTP/JSON
+ApiClient ..> PlateController : HTTP/JSON
+ApiClient ..> SessionController : HTTP/JSON
+ApiClient ..> PaymentController : HTTP/JSON
+ApiClient ..> ZoneController : HTTP/JSON
+ApiClient ..> ConfigController : HTTP/JSON
+ApiClient ..> ReportController : HTTP/JSON
+
+'=========================================================
+' SERVICE LAYER (BUSINESS LOGIC)
+'=========================================================
+package "Backend (Python) - Service Layer" {
+  class AuthService {
+    +login(email, password): Token
+    +logout(token)
+  }
+
+  class PlateRecognitionService {
+    +process(image): PlateRecognitionResult
+    +validateFormat(text): bool
+  }
+
+  class FeeCalculationService {
+    +calculate(session: ParkingSession,\nzone: ParkingZone, params: SystemParameters,\nrepeatCount: int): FeeBreakdown
+  }
+
+  class SessionService {
+    +createSession(plateText, zoneId, entryTime): ParkingSession
+    +closeSession(sessionId, exitTime): ParkingSession
+    +editSession(sessionId, data): ParkingSession
+    +listSessions(filter): List
+  }
+
+  class PaymentService {
+    +markPaid(sessionId): ParkingSession
+    +markUnpaid(sessionId): ParkingSession
+    +markOverdue(sessionId): ParkingSession
+  }
+
+  class ZoneService {
+    +addZone(zone): ParkingZone
+    +updateZone(zoneId, zone): ParkingZone
+    +deleteZone(zoneId)
+    +listZones(): List
+  }
+
+  class ConfigService {
+    +getConfig(): SystemParameters
+    +updateConfig(params): SystemParameters
+  }
+
+  class ReportingService {
+    +revenueReport(from, to): RevenueReport
+    +violationReport(from, to): ViolationReport
+    +exportReport(type, format): File
+  }
+
+  class ViolationService {
+    +computeRepeatCount(plate): int
+    +registerViolation(plate, type, notes): ViolationRecord
+  }
+}
+
+AuthController ..> AuthService
+PlateController ..> PlateRecognitionService
+SessionController ..> SessionService
+PaymentController ..> PaymentService
+ZoneController ..> ZoneService
+ConfigController ..> ConfigService
+ReportController ..> ReportingService
+
+SessionService ..> FeeCalculationService
+SessionService ..> ViolationService
+PaymentService ..> ViolationService
+ReportingService ..> ViolationService
+
+'=========================================================
+' INFRASTRUCTURE (ML ADAPTERS)
+'=========================================================
+package "Backend (Python) - ML Adapters" {
+  class YOLODetector {
+    +modelName: String = "yolov8n.pt"
+    +detectPlate(image): BoundingBox
+  }
+
+  class OCRReader {
+    +languages: String = "en, hu"
+    +readText(image, bbox): String
+  }
+
+  class BoundingBox {
+    +x: int
+    +y: int
+    +w: int
+    +h: int
+  }
+}
+
+PlateRecognitionService ..> YOLODetector : uses
+PlateRecognitionService ..> OCRReader : uses
+YOLODetector ..> BoundingBox : returns
+
+'=========================================================
+' DATA ACCESS LAYER (REPOSITORIES / DAO)
+'=========================================================
+package "Backend (Python) - Repository Layer" {
+  class AdminRepository {
+    +getByEmail(email): Admin
+  }
+
+  class DriverRepository {
+    +getByEmail(email): Driver
+  }
+
+  class VehicleRepository {
+    +add(vehicle: Vehicle)
+    +getByPlate(plate): Vehicle
+    +listByDriver(driverId): List
+  }
+
+  class SessionRepository {
+    +create(session: ParkingSession)
+    +update(session: ParkingSession)
+    +getById(id): ParkingSession
+    +list(filter): List
+  }
+
+  class ZoneRepository {
+    +add(zone: ParkingZone)
+    +update(zone: ParkingZone)
+    +delete(zoneId)
+    +getById(zoneId): ParkingZone
+    +listAll(): List
+  }
+
+  class ConfigRepository {
+    +get(): SystemParameters
+    +save(params: SystemParameters)
+  }
+
+  class PaymentRepository {
+    +create(payment: Payment)
+    +getBySession(sessionId): Payment
+  }
+
+  class ViolationRepository {
+    +add(v: ViolationRecord)
+    +listByPlate(plate): List
+  }
+
+  class ReportRepository {
+    +save(report: Report)
+    +get(reportId): Report
+  }
+}
+
+AuthService ..> AdminRepository
+AuthService ..> DriverRepository
+
+SessionService ..> SessionRepository
+SessionService ..> ZoneRepository
+SessionService ..> VehicleRepository
+
+FeeCalculationService ..> ConfigRepository
+FeeCalculationService ..> ZoneRepository
+
+PaymentService ..> PaymentRepository
+PaymentService ..> SessionRepository
+
+ZoneService ..> ZoneRepository
+ConfigService ..> ConfigRepository
+
+ViolationService ..> ViolationRepository
+ViolationService ..> SessionRepository
+
+ReportingService ..> SessionRepository
+ReportingService ..> PaymentRepository
+ReportingService ..> ViolationRepository
+ReportingService ..> ReportRepository
+
+'=========================================================
+' DOMAIN MODEL (ENTITIES)
+'=========================================================
+package "Domain Model (Entities)" {
+  class Admin {
+    +adminId: UUID
+    +name: String
+    +email: String
+    +passwordHash: String
+  }
+
+  class Driver {
+    +driverId: UUID
+    +name: String
+    +email: String
+    +passwordHash: String
+    +phone: String
+  }
+
+  class Vehicle {
+    +vehicleId: UUID
+    +plateNumber: String
+    +ownerName: String
+    +vehicleType: VehicleType
+    +registrationStatus: RegistrationStatus
+  }
+
+  enum VehicleType {
+    Car
+    Van
+    Motorcycle
+    Truck
+  }
+
+  enum RegistrationStatus {
+    Active
+    Suspended
+    Unknown
+  }
+
+  class ParkingZone {
+    +zoneId: String
+    +zoneName: String
+    +baseHourlyRateHUF: int
+    +latitude: double
+    +longitude: double
+  }
+
+  class PeakHoursRule {
+    +ruleId: UUID
+    +startTime: Time
+    +endTime: Time
+    +daysOfWeek: String
+    +multiplier: double
+  }
+
+  class SystemParameters {
+    +maxAllowedDurationMinutes: int
+    +overstayPenaltyMultiplier: double
+    +repeatPenaltyIncrementPct: double
+    +feeCapEnabled: bool
+    +maxFeeCapHUF: int
+    +yoloConfidenceThreshold: double
+    +ocrConfidenceThreshold: double
+    +plateRegex: String
+  }
+
+  class ParkingSession {
+    +sessionId: String
+    +entryTimestamp: DateTime
+    +exitTimestamp: DateTime
+    +durationMinutes: int
+    +status: SessionStatus
+  }
+
+  enum SessionStatus {
+    Active
+    Closed
+    Paid
+    Unpaid
+    Overdue
+  }
+
+  class FeeBreakdown {
+    +baseFeeHUF: int
+    +peakMultiplierApplied: double
+    +overstayPenaltyHUF: int
+    +repeatPenaltyHUF: int
+    +capApplied: bool
+    +finalFeeHUF: int
+  }
+
+  class Payment {
+    +paymentId: UUID
+    +amountHUF: int
+    +paidAt: DateTime
+    +method: PaymentMethod
+    +status: PaymentStatus
+  }
+
+  enum PaymentMethod {
+    Cash
+    Card
+    BankTransfer
+    Simulated
+  }
+
+  enum PaymentStatus {
+    Initiated
+    Completed
+    Failed
+    Refunded
+  }
+
+  class ViolationRecord {
+    +violationId: UUID
+    +plateNumber: String
+    +type: ViolationType
+    +createdAt: DateTime
+    +notes: String
+  }
+
+  enum ViolationType {
+    Overstay
+    Unpaid
+    RepeatOffense
+  }
+
+  class RepeatOffenderProfile {
+    +plateNumber: String
+    +repeatCount: int
+    +lastViolationAt: DateTime
+  }
+
+  class UploadedImage {
+    +imageId: UUID
+    +fileName: String
+    +contentType: String
+    +sizeBytes: long
+    +uploadedAt: DateTime
+  }
+
+  class PlateRecognitionResult {
+    +resultId: UUID
+    +plateText: String
+    +bboxX: int
+    +bboxY: int
+    +bboxW: int
+    +bboxH: int
+    +detectionConfidence: double
+    +ocrConfidence: double
+    +isValidFormat: bool
+  }
+
+  abstract class Report {
+    +reportId: UUID
+    +generatedAt: DateTime
+    +dateFrom: Date
+    +dateTo: Date
+  }
+
+  class RevenueReport {
+    +totalRevenueHUF: long
+    +paidCount: int
+    +unpaidCount: int
+    +overdueCount: int
+  }
+
+  class ViolationReport {
+    +totalViolations: int
+    +topRepeatOffenders: String
+  }
+
+  Report <|-- RevenueReport
+  Report <|-- ViolationReport
+}
+
+'=========================================================
+' DOMAIN RELATIONS (AGGREGATION/COMPOSITION)
+'=========================================================
+
+' Driver owns vehicles (aggregation)
+Driver "1" o-- "0..*" Vehicle : owns
+
+' Vehicle has sessions (association)
+Vehicle "1" -- "0..*" ParkingSession : used in
+
+' Zone linked to sessions (association)
+ParkingZone "1" -- "0..*" ParkingSession : occurs in
+
+' Zone contains peak rules (composition)
+ParkingZone "1" *-- "0..*" PeakHoursRule : peak rules
+
+' Session contains fee breakdown (composition)
+ParkingSession "1" *-- "0..1" FeeBreakdown : fee details
+
+' Session contains payment (composition)
+ParkingSession "1" *-- "0..1" Payment : payment
+
+' Repeat offender profile aggregates violations (aggregation)
+RepeatOffenderProfile "1" o-- "0..*" ViolationRecord : violation history
+
+' Uploaded image produces recognition result (composition)
+UploadedImage "1" *-- "0..1" PlateRecognitionResult : result
+
+' Recognition result identifies a vehicle by plate (dependency)
+PlateRecognitionResult ..> Vehicle : identifies by plate
+
+'=========================================================
+' ADDED CONNECTIONS (AS REQUESTED)
+'=========================================================
+
+ConfigService --> SystemParameters : updates
+
+Driver ..> SessionService
+Driver ..> PaymentService
+Driver ..> PlateRecognitionService
+
+Admin ..> AuthService
+Admin ..> ZoneService
+Admin ..> ConfigService
+Admin ..> ReportingService
+Admin ..> SessionService
+
+@enduml

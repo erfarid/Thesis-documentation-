@@ -1,0 +1,113 @@
+@startuml
+!pragma layout smetana
+top to bottom direction
+
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam linetype ortho
+skinparam ranksep 40
+skinparam nodesep 30
+
+title
+Smart Parking System - Use Case Diagram
+end title
+
+actor User
+actor Worker
+actor Admin
+
+rectangle "Smart Parking System" as SPS {
+
+  package "Authentication" {
+    usecase "Login" as UC_Login
+    usecase "Logout" as UC_Logout
+  }
+
+  package "Session Management" {
+    usecase "View Sessions" as UC_ViewSessions
+    usecase "Upload Vehicle Image" as UC_UploadImage
+    usecase "Edit Session" as UC_EditSession
+    usecase "Recognize Plate" as UC_RecognizePlate
+    usecase "Create Session" as UC_CreateSession
+    usecase "Close Session" as UC_CloseSession
+  }
+
+  package "Payments & Violations" {
+    usecase "Calculate Fee" as UC_CalculateFee
+    usecase "Mark Paid" as UC_MarkPaid
+    usecase "Mark Unpaid" as UC_MarkUnpaid
+    usecase "Mark Overdue" as UC_MarkOverdue
+    usecase "Register Violation" as UC_RegisterViolation
+    usecase "Compute Repeat Violations" as UC_ComputeRepeat
+  }
+
+  package "Zones & Reports" {
+    usecase "View Zones" as UC_ViewZones
+    usecase "Add Zone" as UC_AddZone
+    usecase "Delete Zone" as UC_DeleteZone
+    usecase "Update Zone" as UC_UpdateZone
+    usecase "View Reports" as UC_ViewReports
+    usecase "Generate Revenue Report" as UC_RevenueReport
+    usecase "Generate Violation Report" as UC_ViolationReport
+    usecase "Export Report" as UC_ExportReport
+  }
+
+  package "System Config" {
+    usecase "View Config" as UC_ViewConfig
+    usecase "Update Config" as UC_UpdateConfig
+  }
+}
+
+' ---------- keep actors arranged vertically ----------
+User -[hidden]down-> Worker
+Worker -[hidden]down-> Admin
+
+' ---------- actor associations ----------
+User --> UC_Login
+User --> UC_Logout
+User --> UC_ViewSessions
+User --> UC_ViewZones
+
+Worker --> UC_UploadImage
+Worker --> UC_CreateSession
+Worker --> UC_EditSession
+Worker --> UC_CloseSession
+Worker --> UC_MarkPaid
+Worker --> UC_MarkUnpaid
+Worker --> UC_MarkOverdue
+Worker --> UC_ViewSessions
+Worker --> UC_ViewZones
+
+Admin --> UC_ViewReports
+Admin --> UC_ExportReport
+Admin --> UC_AddZone
+Admin --> UC_UpdateZone
+Admin --> UC_DeleteZone
+Admin --> UC_ViewConfig
+Admin --> UC_UpdateConfig
+Admin --> UC_ViewSessions
+Admin --> UC_ViewZones
+
+' ---------- include ----------
+UC_UploadImage ..> UC_RecognizePlate : <<include>>
+UC_CreateSession ..> UC_CalculateFee : <<include>>
+UC_CloseSession ..> UC_CalculateFee : <<include>>
+UC_RegisterViolation ..> UC_ComputeRepeat : <<include>>
+UC_ViewReports ..> UC_RevenueReport : <<include>>
+UC_ViewReports ..> UC_ViolationReport : <<include>>
+
+' ---------- extend ----------
+UC_MarkOverdue ..> UC_RegisterViolation : <<extend>>
+UC_CloseSession ..> UC_MarkPaid : <<extend>>
+UC_CloseSession ..> UC_MarkUnpaid : <<extend>>
+UC_ViewReports ..> UC_ExportReport : <<extend>>
+
+' ---------- precedes ----------
+UC_Login ..> UC_CreateSession : <<precedes>>
+UC_UploadImage ..> UC_CreateSession : <<precedes>>
+UC_CreateSession ..> UC_CloseSession : <<precedes>>
+UC_CloseSession ..> UC_MarkPaid : <<precedes>>
+UC_AddZone ..> UC_UpdateZone : <<precedes>>
+
+@enduml
